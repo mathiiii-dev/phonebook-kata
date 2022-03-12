@@ -1,6 +1,7 @@
 import {Button, Col, Container, Form, Row, Table} from "react-bootstrap";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Link from 'next/link'
+import process from "../next.config";
 
 export default function Home() {
 
@@ -8,7 +9,7 @@ export default function Home() {
 
     const search = (event) => {
         event.preventDefault()
-        fetch('http://localhost:8010/proxy/phonebook')
+        fetch(`${process.env.api}/phonebook`)
             .then((res) => res.json())
             .then((data) => {
                 data = data.filter(function (e) {

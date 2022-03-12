@@ -1,5 +1,6 @@
 import {Button, Col, Container, Form, Row, Alert} from "react-bootstrap";
 import {useState} from "react";
+import process from "../next.config";
 
 export default function New() {
 
@@ -10,7 +11,7 @@ export default function New() {
         event.preventDefault()
 
         const res = await fetch(
-            ' http://localhost:8010/proxy/phonebook/register',
+            `${process.env.api}/phonebook/register`,
             {
                 body: JSON.stringify({
                     firstname: event.target.firstname.value,

@@ -1,4 +1,5 @@
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
+import process from "../../next.config";
 
 export default function Edit({phone}) {
     console.log(phone)
@@ -29,7 +30,7 @@ export default function Edit({phone}) {
 }
 
 export async function getStaticPaths() {
-    const res = await fetch('http://localhost:8010/proxy/phonebook');
+    const res = await fetch(`${process.env.api}/phonebook`);
     const data = await res.json();
     const paths = data.map(
         phone => {
@@ -47,7 +48,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({params}) {
-    const phone = await fetch(`http://localhost:8010/proxy/phonebook/${params.id}`).then(r => r.json())
+    const phone = await fetch(`${process.env.api}/phonebook/${params.id}`).then(r => r.json())
     return {
         props: {
             phone
