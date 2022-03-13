@@ -9,26 +9,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class PhoneBookController extends AbstractController
 {
 
     private PhoneBookHandler $phoneBookHandler;
     private PhoneBookRepository $phoneBookRepository;
-    private SerializerInterface $serializer;
 
-    public function __construct(PhoneBookHandler $phoneBookHandler, PhoneBookRepository $phoneBookRepository, SerializerInterface $serializer)
+    public function __construct(PhoneBookHandler $phoneBookHandler, PhoneBookRepository $phoneBookRepository)
     {
         $this->phoneBookHandler = $phoneBookHandler;
         $this->phoneBookRepository = $phoneBookRepository;
-        $this->serializer = $serializer;
     }
 
     /**
@@ -38,8 +30,17 @@ class PhoneBookController extends AbstractController
     public function register(Request $request): Response
     {
         $this->phoneBookHandler->handlePhoneBookCreate($request);
-
         return new JsonResponse([], Response::HTTP_CREATED);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/phonebook/{id}/edit', name: 'app_phone_book_edit', methods: 'PATCH')]
+    public function edit(Request $request, int $id): Response
+    {
+        $this->phoneBookHandler->handlePhoneBookEdit($request, $id);
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 
     #[Route('/phonebook', name: 'app_get_phone_books', methods: 'GET')]
