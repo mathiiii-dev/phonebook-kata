@@ -1,10 +1,12 @@
 import {Button, Col, Container, Form, Row, Alert} from "react-bootstrap";
 import {useState} from "react";
 import process from "../next.config";
+import Link from 'next/link'
 
 export default function New() {
 
     const [show, setShow] = useState(false);
+    const [showValid, setShowValid] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const register = async event => {
@@ -25,11 +27,14 @@ export default function New() {
             }
         )
 
-        const result = await res.json()
-
-        if(result.status === 400) {
-            setShow(true)
-            setErrorMessage(result.error_description)
+        if(res.status === 201) {
+            setShowValid(true)
+        } else {
+            const result = await res.json();
+            if(result.status === 400) {
+                setShow(true)
+                setErrorMessage(result.error_description)
+            }
         }
     }
 
@@ -37,12 +42,25 @@ export default function New() {
         <Container>
             <Row className="mt-5">
                 <Col>
+                    <Link href="/">
+                        <Button className="mb-3">Return home</Button>
+                    </Link>
                     {
                         show ?
                             <Alert variant="danger" onClose={() => setShow(false)} dismissible>
-                                <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                                <Alert.Heading>Error</Alert.Heading>
                                 <p>
                                     {errorMessage}
+                                </p>
+                            </Alert>
+                            : ''
+                    }
+                    {
+                        showValid ?
+                            <Alert variant="success" onClose={() => setShow(false)} dismissible>
+                                <Alert.Heading>Success</Alert.Heading>
+                                <p>
+                                    Your entry has been added
                                 </p>
                             </Alert>
                             : ''
